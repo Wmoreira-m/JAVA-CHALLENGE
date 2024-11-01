@@ -2,6 +2,7 @@ package br.com.fiap.isolutions.test;
 
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
+import org.glassfish.jersey.jsonb.JsonBindingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
 import java.net.URI;
@@ -14,8 +15,19 @@ public class App {
     public static HttpServer startServer() {
         // Configura o pacote onde estão os recursos
         final ResourceConfig rc = new ResourceConfig().packages("br.com.fiap.isolutions.resource");
-        return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
+        rc.register(JsonBindingFeature.class);
+
+        String porta = System.getenv("PORTA");
+        if (porta == null || porta.isEmpty()){
+            porta = "8080";
+        }
+
+        URI baseUri = URI.create("http://0.0.0.0:" + porta + "/");
+
+        return GrizzlyHttpServerFactory.createHttpServer((baseUri), rc);
     }
+
+
 
     public static void main(String[] args) {
         final HttpServer server = startServer();
