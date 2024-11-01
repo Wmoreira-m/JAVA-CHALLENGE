@@ -7,7 +7,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 
 import java.net.URI;
 
-public class App {
+public class Main {
 
     // URL base do servidor
     public static final String BASE_URI = "http://localhost:8080/isolutions/";
