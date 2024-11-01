@@ -28,10 +28,10 @@ public class ClienteResource {
     }
 
     @GET
-    @Path("/{id}")
-    public Response buscarClientePorId(@PathParam("id") int id) {
+    @Path("/{cpf}")
+    public Response buscarClientePorCpf(@PathParam("cpf") String cpf) {
         try {
-            Cliente cliente = clienteDao.buscarClientePorId(id);
+            Cliente cliente = clienteDao.buscarClientePorCpf(cpf);
             if (cliente == null) {
                 return ErrorResponse.createErrorResponse(Response.Status.NOT_FOUND, "Cliente não encontrado");
             }
@@ -41,6 +41,31 @@ public class ClienteResource {
             return ErrorResponse.createErrorResponse(Response.Status.NOT_FOUND, "Erro ao buscar cliente");
         }
     }
+
+    @GET
+    @Path("/login")
+    public Response loginCliente(@QueryParam("cpf") String cpf, @QueryParam("senha") String senha) {
+        try {
+            Cliente cliente = clienteDao.buscarClientePorLogin(cpf, senha);
+            return Response.ok(cliente).build();
+        } catch (SQLException e) {
+            String errorMessage = e.getMessage();
+            if (errorMessage.equals("CPF não encontrado")) {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("{\"message\": \"CPF não encontrado\"}")
+                        .build();
+            } else if (errorMessage.equals("Senha incorreta")) {
+                return Response.status(Response.Status.UNAUTHORIZED)
+                        .entity("{\"message\": \"Senha incorreta\"}")
+                        .build();
+            }
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("{\"message\": \"Erro no servidor\"}")
+                    .build();
+        }
+    }
+
+
 
     @GET
     public Response buscarTodosClientes() {

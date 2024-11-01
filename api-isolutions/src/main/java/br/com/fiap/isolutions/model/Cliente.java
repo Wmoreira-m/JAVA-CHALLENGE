@@ -17,6 +17,14 @@ public class Cliente {
 
     public Cliente(){}
 
+    public Cliente(int idCliente, String nome, String login, String senha) {
+        this.nome = nome;
+        this.idCliente = idCliente;
+        this.login = login;
+        this.senha = senha;
+    }
+
+
     public int getIdCliente() { return idCliente; }
     public void setIdCliente(int idCliente) { this.idCliente = idCliente; }
 

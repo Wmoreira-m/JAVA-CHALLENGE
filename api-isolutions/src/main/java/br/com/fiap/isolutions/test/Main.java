@@ -15,18 +15,9 @@ public class Main {
     public static HttpServer startServer() {
         // Configura o pacote onde estão os recursos
         final ResourceConfig rc = new ResourceConfig().packages("br.com.fiap.isolutions.resource");
-        rc.register(JsonBindingFeature.class);
 
-        String porta = System.getenv("PORTA");
-        if (porta == null || porta.isEmpty()){
-            porta = "8080";
-        }
-
-        URI baseUri = URI.create("http://0.0.0.0:" + porta + "/");
-
-        return GrizzlyHttpServerFactory.createHttpServer((baseUri), rc);
+        return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
     }
-
 
 
     public static void main(String[] args) {

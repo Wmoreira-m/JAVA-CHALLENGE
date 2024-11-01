@@ -37,6 +37,35 @@ public class ClienteDao {
         }
     }
 
+    public Cliente buscarClientePorCpf(String cpf) throws SQLException {
+        String sql = "SELECT * FROM T_ISL_CLIENTE WHERE CPF = ?";
+        Cliente cliente = null;
+
+        try (Connection conn = ConexaoBanco.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, cpf);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                cliente = new Cliente(
+                        rs.getString("NOME"),
+                        rs.getString("CPF"),
+                        rs.getInt("ID_CLIENTE"),
+                        rs.getString("LOGIN"),
+                        rs.getString("SENHA")
+                );
+            } else {
+                System.err.println("Cliente com CPF " + cpf + " não encontrado.");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Erro ao buscar cliente por CPF: " + e.getMessage());
+            throw new SQLException("Erro ao buscar cliente.", e);
+        }
+        return cliente;
+    }
+
     public Cliente buscarClientePorId(int id) throws SQLException {
         String sql = "SELECT * FROM T_ISL_CLIENTE WHERE ID_CLIENTE = ?";
         Cliente cliente = null;
@@ -56,7 +85,7 @@ public class ClienteDao {
                         rs.getString("SENHA")
                 );
             } else {
-                System.err.println("Cliente com ID " + id + " não encontrado.");
+                System.err.println("Cliente com ID: " + id + " não encontrado.");
             }
 
         } catch (SQLException e) {
@@ -65,6 +94,43 @@ public class ClienteDao {
         }
         return cliente;
     }
+
+    public Cliente buscarClientePorLogin(String login, String senha) throws SQLException {
+        String sql = "SELECT * FROM T_ISL_CLIENTE WHERE CPF = ?";
+        Cliente cliente = null;
+
+        try (Connection conn = ConexaoBanco.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, login);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                // Verifica se a senha corresponde
+                String senhaBanco = rs.getString("SENHA");
+                if (senhaBanco.equals(senha)) {
+                    cliente = new Cliente(
+                            rs.getInt("ID_CLIENTE"),
+                            rs.getString("NOME"),
+                            rs.getString("LOGIN"),
+                            senhaBanco
+                    );
+                } else {
+                    System.err.println("Senha incorreta para o CPF: " + login);
+                    throw new SQLException("Senha incorreta");
+                }
+            } else {
+                System.err.println("Cliente com CPF: " + login + " não encontrado.");
+                throw new SQLException("CPF não encontrado");
+            }
+
+        } catch (SQLException e) {
+            throw new SQLException(e.getMessage(), e);
+        }
+        return cliente;
+    }
+
+
 
     public List<Cliente> listar() throws SQLException {
         List<Cliente> clientes = new ArrayList<>();
