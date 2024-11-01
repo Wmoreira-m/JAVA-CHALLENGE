@@ -1,1 +1,1 @@
-web: java -jar target/api-isolutions-1.0.0-SNAPSHOT.jar
+web: java -jar target/projeto-isolutions-1.0.0-SNAPSHOT.jar
