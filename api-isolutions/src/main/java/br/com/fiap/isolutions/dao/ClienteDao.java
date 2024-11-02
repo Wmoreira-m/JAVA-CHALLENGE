@@ -95,6 +95,8 @@ public class ClienteDao {
         return cliente;
     }
 
+
+
     public Cliente buscarClientePorLogin(String login, String senha) throws SQLException {
         String sql = "SELECT * FROM T_ISL_CLIENTE WHERE CPF = ?";
         Cliente cliente = null;
@@ -106,7 +108,6 @@ public class ClienteDao {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                // Verifica se a senha corresponde
                 String senhaBanco = rs.getString("SENHA");
                 if (senhaBanco.equals(senha)) {
                     cliente = new Cliente(

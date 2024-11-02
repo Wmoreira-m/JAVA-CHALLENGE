@@ -28,19 +28,20 @@ public class VeiculoResource {
 
 
     @GET
-    @Path("/{id}")
-    public Response buscarVeiculoPorId(@PathParam("id") int id) {
+    @Path("/{idCliente}")
+    public Response buscarVeiculosPorIdCliente(@PathParam("idCliente") int idCliente) {
         try {
-            Veiculo veiculo = veiculoDao.buscarVeiculoPorId(id);
-            if (veiculo == null) {
-                return ErrorResponse.createErrorResponse(Response.Status.NOT_FOUND, "Veículo não encontrado.");
+            List<Veiculo> veiculos = veiculoDao.buscarVeiculosPorIdCliente(idCliente);
+            if (veiculos.isEmpty()) {
+                return ErrorResponse.createErrorResponse(Response.Status.NOT_FOUND, "Nenhum veículo encontrado.");
             }
-            return Response.ok(veiculo).build();
+            return Response.ok(veiculos).build();
         } catch (SQLException e) {
             e.printStackTrace();
-            return ErrorResponse.createErrorResponse(Response.Status.NOT_FOUND, "Erro ao buscar veículo.");
+            return ErrorResponse.createErrorResponse(Response.Status.INTERNAL_SERVER_ERROR, "Erro ao buscar veículos.");
         }
     }
+
 
     @GET
     public Response BuscarTodosVeiculos() {

@@ -33,6 +33,38 @@ public class ProblemaDao {
         }
     }
 
+    public List<Problema> buscarProblemasPorIdVeiculo(int idVeiculo) throws SQLException {
+        String sql = "SELECT * FROM T_ISL_PROBLEMA WHERE ID_VEICULO = ?";
+        List<Problema> problemas = new ArrayList<>();
+
+        try (Connection conn = ConexaoBanco.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idVeiculo);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Problema problema = new Problema(
+                        rs.getInt("ID_PROBLEMA"),
+                        rs.getString("DESCRICAO"),
+                        rs.getString("TIPO"),
+                        rs.getInt("GRAVIDADE"),
+                        rs.getInt("ID_VEICULO")
+                );
+                problemas.add(problema);
+            }
+
+            if (problemas.isEmpty()) {
+                System.err.println("Nenhum problema encontrado para o veículo com ID " + idVeiculo);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Erro ao buscar problemas por ID do veículo: " + e.getMessage());
+            throw new SQLException("Erro ao buscar problemas pelo ID do veículo.", e);
+        }
+        return problemas;
+    }
+
     public Problema buscarProblemaPorId(int id) throws SQLException {
         String sql = "SELECT * FROM T_ISL_PROBLEMA WHERE ID_PROBLEMA = ?";
         Problema problema = null;
@@ -49,7 +81,8 @@ public class ProblemaDao {
                         rs.getString("DESCRICAO"),
                         rs.getString("TIPO"),
                         rs.getInt("GRAVIDADE"),
-                        rs.getInt("ID_VEICULO"));
+                        rs.getInt("ID_VEICULO")
+                );
             } else {
                 System.err.println("Problema com ID " + id + " não encontrado.");
             }

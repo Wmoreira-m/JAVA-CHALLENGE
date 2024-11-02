@@ -73,6 +73,40 @@ public class VeiculoDao {
         return veiculo;
     }
 
+    public List<Veiculo> buscarVeiculosPorIdCliente(int idCliente) throws SQLException {
+        String sql = "SELECT * FROM T_ISL_VEICULO WHERE ID_CLIENTE = ?";
+        List<Veiculo> veiculos = new ArrayList<>();
+
+        try (Connection conn = ConexaoBanco.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idCliente);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Veiculo veiculo = new Veiculo(
+                        rs.getInt("ID_VEICULO"),
+                        rs.getString("MODELO"),
+                        rs.getString("ANO"),
+                        rs.getString("PLACA"),
+                        rs.getInt("ID_MARCA"),
+                        rs.getInt("ID_CLIENTE")
+                );
+                veiculos.add(veiculo);
+            }
+
+            if (veiculos.isEmpty()) {
+                System.err.println("Nenhum veículo encontrado para o cliente com ID " + idCliente);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Erro ao buscar veículos por ID do cliente: " + e.getMessage());
+            throw new SQLException("Erro ao buscar veículos pelo ID do cliente.", e);
+        }
+        return veiculos;
+    }
+
+
     public List<Veiculo> listarVeiculos() throws SQLException {
         List<Veiculo> veiculos = new ArrayList<>();
         String sql = "SELECT * FROM T_ISL_VEICULO";

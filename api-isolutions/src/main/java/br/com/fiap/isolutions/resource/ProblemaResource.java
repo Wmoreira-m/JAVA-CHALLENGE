@@ -28,17 +28,17 @@ public class ProblemaResource {
     }
 
     @GET
-    @Path("/{id}")
-    public Response buscarProblemaPorId(@PathParam("id") int id) {
+    @Path("/{idVeiculo}")
+    public Response buscarProblemasPorIdVeiculo(@PathParam("idVeiculo") int idVeiculo) {
         try {
-            Problema problema = problemaDao.buscarProblemaPorId(id);
-            if (problema == null) {
-                return ErrorResponse.createErrorResponse(Response.Status.NOT_FOUND, "Problema não encontrado.");
+            List<Problema> problemas = problemaDao.buscarProblemasPorIdVeiculo(idVeiculo);
+            if (problemas.isEmpty()) {
+                return ErrorResponse.createErrorResponse(Response.Status.NOT_FOUND, "Nenhum problema encontrado.");
             }
-            return Response.ok(problema).build();
+            return Response.ok(problemas).build();
         } catch (SQLException e) {
-            System.err.println("Erro ao buscar problema: " + e.getMessage());
-            return ErrorResponse.createErrorResponse(Response.Status.NOT_FOUND, "Erro ao buscar problema.");
+            System.err.println("Erro ao buscar problemas: " + e.getMessage());
+            return ErrorResponse.createErrorResponse(Response.Status.INTERNAL_SERVER_ERROR, "Erro ao buscar problemas.");
         }
     }
 
@@ -80,13 +80,13 @@ public class ProblemaResource {
 
     @DELETE
     @Path("/{id}")
-    public Response removerProblema(@PathParam("id") int id) {
+    public Response removerProblema(@PathParam("idCliente") int idCliente) {
         try {
-            Problema problema = problemaDao.buscarProblemaPorId(id);
+            Problema problema = problemaDao.buscarProblemaPorId(idCliente);
             if (problema == null) {
                 return ErrorResponse.createErrorResponse(Response.Status.NOT_FOUND, "Problema não encontrado.");
             }
-            problemaDao.removerProblema(id);
+            problemaDao.removerProblema(idCliente);
             return Response.status(Response.Status.OK).entity("Problema removido com sucesso.").build();
         } catch (SQLException e) {
             System.err.println("Erro ao remover problema: " + e.getMessage());
