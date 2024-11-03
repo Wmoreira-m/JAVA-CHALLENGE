@@ -59,7 +59,7 @@ public class ClienteResource {
                         .entity("{\"message\": \"Senha incorreta\"}")
                         .build();
             }
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+            return Response.status(Response.Status.NOT_FOUND)
                     .entity("{\"message\": \"Erro no servidor\"}")
                     .build();
         }

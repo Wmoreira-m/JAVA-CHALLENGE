@@ -38,7 +38,7 @@ public class VeiculoResource {
             return Response.ok(veiculos).build();
         } catch (SQLException e) {
             e.printStackTrace();
-            return ErrorResponse.createErrorResponse(Response.Status.INTERNAL_SERVER_ERROR, "Erro ao buscar veículos.");
+            return ErrorResponse.createErrorResponse(Response.Status.NOT_FOUND, "Erro ao buscar veículos.");
         }
     }
 

@@ -38,7 +38,7 @@ public class ProblemaResource {
             return Response.ok(problemas).build();
         } catch (SQLException e) {
             System.err.println("Erro ao buscar problemas: " + e.getMessage());
-            return ErrorResponse.createErrorResponse(Response.Status.INTERNAL_SERVER_ERROR, "Erro ao buscar problemas.");
+            return ErrorResponse.createErrorResponse(Response.Status.NOT_FOUND, "Erro ao buscar problemas.");
         }
     }
 
@@ -75,22 +75,6 @@ public class ProblemaResource {
         } catch (SQLException e) {
             System.err.println("Erro ao atualizar problema: " + e.getMessage());
             return ErrorResponse.createErrorResponse(Response.Status.NOT_FOUND, "Erro ao atualizar problema.");
-        }
-    }
-
-    @DELETE
-    @Path("/{id}")
-    public Response removerProblema(@PathParam("idCliente") int idCliente) {
-        try {
-            Problema problema = problemaDao.buscarProblemaPorId(idCliente);
-            if (problema == null) {
-                return ErrorResponse.createErrorResponse(Response.Status.NOT_FOUND, "Problema não encontrado.");
-            }
-            problemaDao.removerProblema(idCliente);
-            return Response.status(Response.Status.OK).entity("Problema removido com sucesso.").build();
-        } catch (SQLException e) {
-            System.err.println("Erro ao remover problema: " + e.getMessage());
-            return ErrorResponse.createErrorResponse(Response.Status.NOT_FOUND, "Erro ao remover problema.");
         }
     }
 }

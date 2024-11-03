@@ -145,23 +145,4 @@ public class ProblemaDao {
             throw new SQLException("Erro ao atualizar problema.", e);
         }
     }
-
-    public void removerProblema(int id) throws SQLException {
-        String sql = "DELETE FROM T_ISL_PROBLEMA WHERE ID_PROBLEMA = ?";
-
-        try (Connection conn = ConexaoBanco.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, id);
-            int rowsDeleted = stmt.executeUpdate();
-            if (rowsDeleted == 0) {
-                System.out.println("Problema com ID " + id + " não encontrado para remoção.");
-                throw new SQLException("Problema não encontrado para remoção.");
-            }
-
-        } catch (SQLException e) {
-            System.err.println("Erro ao remover problema: " + e.getMessage());
-            throw new SQLException("Erro ao remover problema.", e);
-        }
-    }
 }
